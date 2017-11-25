@@ -21,7 +21,11 @@ module hazard( input opcode[1:0], input [2:0] funct,input p1_memread, input p1_r
             if(opcode[1:0]==2'b01 && funct == 3'b111)               // opcode for branch
             begin
             if(p1_memwread == 1'b1 && p1_regwrite == 1'b1 && (src1 == p1_regdestc || src2 == p1_regdest || src3 == p1_regdest))
-               // have to intoduce two stalls
+              begin
+                id_ex_control_value=1;                             // I know we have to introduce two stalls but it will again be a hazard (see last type                                               // hazard type in my code) in the next cycle so only one stall needed for now
+                pc_write=0;                     
+                if_id_write=0;          
+            end                                           
 
             if (p1_regwrite == 1'b1 && (src1 == p1_regdestc || src2 == p1_regdest || src3 == p1_regdest))
                   begin
